@@ -25,7 +25,7 @@ script.on_event("scisolver_toggle_interface", function(event)
 	---
 	--if true then return hack(storage.main_frame) end
 	---
-	storage.main_frame.add{type = "frame"}.add { type = "choose-elem-button", elem_type = "recipe", name = "choose-recipe-button", caption = "Pick a recipe" }
+	storage.main_frame.add { type = "frame" }.add { type = "choose-elem-button", elem_type = "recipe", name = "choose-recipe-button", caption = "Pick a recipe" }
 end)
 
 script.on_event(defines.events.on_gui_click, function(event)
@@ -41,7 +41,7 @@ end)
 script.on_event(defines.events.on_gui_elem_changed, function(event)
 	storage.recipe = event.element.elem_value
 	storage.main_frame.clear()
-	local frame = storage.main_frame.add{type = "frame"}
+	local frame = storage.main_frame.add { type = "frame" }
 	storage.rate_ui = frame.add { type = "textfield", name = "rate-selector", numeric = true, text = "1" }
 	frame.add { type = "button", name = "get-result-button", caption = "compute" }
 end)
@@ -90,7 +90,7 @@ end
 
 local style = {
 	horizontal_scroll_policy = "auto-and-reserve-space",
-	vertical_scroll_policy = "auto-and-reserve-space",
+	vertical_scroll_policy = "auto-and-reerve-space",
 	auto_center = true,
 }
 
@@ -104,10 +104,10 @@ function rates_to_ui(rates, frame)
 
 	local ret = frame.add(
 		merge({
-			type = "frame",
-			direction = "vertical",
-		},
-		style
+				type = "frame",
+				direction = "vertical",
+			},
+			style
 		))
 	
 	if rates.error ~= nil then
@@ -116,21 +116,21 @@ function rates_to_ui(rates, frame)
 	end
 	local first_panel = ret.add(
 		merge({
-			type = "frame",
-			direction = "vertical",
-			caption = rates.name,
-		},
-		style
+				type = "frame",
+				direction = "vertical",
+				caption = rates.recipe.name,
+			},
+			style
 		))
 
 	local inner_panel = first_panel.add(
 		merge({
-			type = "frame",
-			directon = "vertical",
-		},
-		style
+				type = "frame",
+				directon = "vertical",
+			},
+			style
 		))
-	
+
 	local sprite_name = (rates.main_product.type == "fluid") and ("fluid/" .. rates.main_product.name) or
 		("item/" .. rates.main_product.name)
 	local icon = prototypes
