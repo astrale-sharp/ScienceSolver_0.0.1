@@ -134,13 +134,8 @@ function rates_to_ui(rates, frame)
 			style
 		))
 
-	local icon = prototypes
-	if icon ~= nil then
-		inner_panel.add { type = "sprite", sprite = sprite_name }
-	end
-
-	inner_panel.add { type = "label", caption = "Using recipe: " .. rates.recipe.name --.. " of type: " ..  rates.recipe.caory
-	}
+	inner_panel.add { type = "sprite", sprite = sprite_name }
+	inner_panel.add { type = "label", caption = "Using recipe: " .. rates.recipe.name }
 	inner_panel.add { type = "label", caption = "You need: " .. tostring(rates.n_machines) .. " machines at engineer speed." }
 	inner_panel.add { type = "label", caption = "rate of production is: " .. tostring(rates.res_rate) }
 
