@@ -32,9 +32,15 @@ script.on_event(defines.events.on_gui_click, function(event)
 	if event.element.name == "get-result-button" then
 		local recip = prototypes.recipe[storage.recipe]
 		local rates = rec_get_rates(recip, storage.rate_ui.text)
-
+		local sum_rates = extract_summary(rates)
 		storage.main_frame.clear()
-		rates_to_ui(rates, storage.main_frame)
+
+		local tabs = storage.main_frame.add { type = "tabbed-pane" }
+		local tab1 = tabs.add { type = "tab" }
+		rates_to_ui_summary(rates, sum_rates, tab1)
+
+		local tab2 = tabs.add { type = "tab" }
+		sum_ui_summary(sum_rates, tab2)
 	end
 end)
 
@@ -88,19 +94,46 @@ function rec_get_rates(recipe, rate)
 	return ret
 end
 
+function combine(t1, t2)
+	if t1[t2.recipe.name] == nil then
+		t1[t2.recipe.name] = {
+			count = 1,
+			n_machines = t2.n_machines,
+			res_rate = t2.res_rate
+		}
+	else
+		local ref = t1[t2.recipe.name]
+		t1[t2.recipe.name] = {
+			count = ref.count + 1,
+			n_machines = ref.n_machines + t2.n_machines,
+			res_rate = ref.res_rate + t2.res_rate
+		}
+	end
+end
+
+function extract_summary(rates)
+	local res = {} -- recipe name to  {rate : rate, sum_count}
+	combine(res, rates);
+	for index, value in ipairs(rates.ingredients) do
+		combine(res, extract_summary(value))
+	end
+	return res
+end
+
 local style = {
 	horizontal_scroll_policy = "auto-and-reserve-space",
 	vertical_scroll_policy = "auto-and-reerve-space",
 	auto_center = true,
 }
 
-function rates_to_ui(rates, frame)
-	local function merge (t1,t2)
-		local ret = {}
-		for k,v in pairs(t1) do ret[k] = v end
-		for k,v in pairs(t2) do ret[k] = v end
-		return ret
-	 end
+function merge(t1, t2)
+	local ret = {}
+	for k, v in pairs(t1) do ret[k] = v end
+	for k, v in pairs(t2) do ret[k] = v end
+	return ret
+end
+
+function rates_to_ui_summary(rates, sum_rate, frame)
 	local sprite_name = "icons/" .. rates.recipe.name
 	-- (rates.main_product.type == "fluid") and ("fluid/" .. rates.main_product.name) or
 	--	("item/" .. rates.main_product.name)
@@ -116,7 +149,22 @@ function rates_to_ui(rates, frame)
 	if rates.error ~= nil then
 		ret.add { type = "label", caption = rates.error }
 		return
+	local duplicated = sum_rate[rates.recipe.name]
+	if duplicated ~= nil then
+		ret.add(merge({
+				type = "label",
+				caption = "recipe: " .. rates.recipe.name .. " is a used many times, see next tab.",
+			},
+			style
+		))
+
+		ret.add { type = "sprite", sprite = sprite_name }
+		return ret
 	end
+	-- if rates.error ~= nil then
+	-- 	ret.add { type = "label", caption = rates.error }
+	-- 	return
+	-- end
 	local first_panel = ret.add(
 		merge({
 				type = "frame",
@@ -145,17 +193,23 @@ function rates_to_ui(rates, frame)
 		if second_panel == nil then
 			second_panel = ret.add(
 				merge({
-					type = "frame",
-					direction = "horizontal",
-					caption = "ingredients of " .. rates.name,
-				},
-				style
+						type = "frame",
+						direction = "horizontal",
+						caption = "ingredients of " .. rates.name,
+					},
+					style
 				))
 		end
-		rates_to_ui(v, second_panel)
+		rates_to_ui_summary(v, sum_rate ,second_panel)
 		::continue::
 	end
 	return ret
+end
+
+function sum_ui_summary(rates_summary, frame)
+	for index, value in ipairs(rates_summary) do
+		rates_to_ui_summary(value.rate, {}, frame)
+	end
 end
 
 function hack(frame)
