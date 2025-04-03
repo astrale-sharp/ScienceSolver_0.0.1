@@ -145,10 +145,8 @@ function rates_to_ui_summary(rates, sum_rate, frame)
 			},
 			style
 		))
-	
-	if rates.error ~= nil then
-		ret.add { type = "label", caption = rates.error }
-		return
+
+
 	local duplicated = sum_rate[rates.recipe.name]
 	if duplicated ~= nil then
 		ret.add(merge({
