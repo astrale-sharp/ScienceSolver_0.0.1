@@ -101,6 +101,9 @@ function rates_to_ui(rates, frame)
 		for k,v in pairs(t2) do ret[k] = v end
 		return ret
 	 end
+	local sprite_name = "icons/" .. rates.recipe.name
+	-- (rates.main_product.type == "fluid") and ("fluid/" .. rates.main_product.name) or
+	--	("item/" .. rates.main_product.name)
 
 	local ret = frame.add(
 		merge({
@@ -131,8 +134,6 @@ function rates_to_ui(rates, frame)
 			style
 		))
 
-	local sprite_name = (rates.main_product.type == "fluid") and ("fluid/" .. rates.main_product.name) or
-		("item/" .. rates.main_product.name)
 	local icon = prototypes
 	if icon ~= nil then
 		inner_panel.add { type = "sprite", sprite = sprite_name }
