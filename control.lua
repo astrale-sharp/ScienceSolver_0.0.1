@@ -1,3 +1,8 @@
+--- states
+--- 1. Select a recipe
+--- 2. Select a target rate
+--- 3. View a summary of the needed machines
+
 function destroy_main_frame()
 	if storage.main_frame ~= nil then
 		storage.main_frame.destroy()
