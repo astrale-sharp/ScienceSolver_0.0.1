@@ -45,10 +45,8 @@ end)
 script.on_event(defines.events.on_gui_text_changed, function(event) end)
 
 -- @parameters recip: { name : string }
-function rec_get_rates(recipe, rate, recip_index)
-	if recipe == nil then
-		return { name = recip_index, error = "recipe is nil for " .. tostring(recip_index) }
-	end
+function rec_get_rates(recipe, rate)
+	if recipe == nil then error("recipe cannot be nil") end
 	-- todo select the one needed for up
 	local main_product = recipe.main_product
 	if main_product == nil then
@@ -84,7 +82,6 @@ function rec_get_rates(recipe, rate, recip_index)
 	end
 	return ret
 end
-
 
 local style = {
 	horizontal_scroll_policy = "auto-and-reserve-space",
