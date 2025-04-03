@@ -1,0 +1,13 @@
+{
+    "factorio.versions": [
+        {
+            "name": "factorio",
+            "factorioPath": "/home/astrale/Games/factorio-space-age_linux_2.0.21/factorio/bin/x64/factorio",
+            "active": true
+        }
+    ],
+    "Lua.workspace.userThirdParty": [
+        "/home/astrale/.config/Code/User/workspaceStorage/5044edb4831cff22c585ed9958db8679/justarandomgeek.factoriomod-debug/sumneko-3rd"
+    ],
+    "Lua.workspace.checkThirdParty": "ApplyInMemory"
+}
